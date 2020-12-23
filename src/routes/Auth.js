@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import { authService } from "firedb";
 
 const StyledAuthWrapper = styled.div`
 	display: flex;
@@ -57,6 +58,7 @@ const StyledOAuthButton = styled.button`
 export default function Auth() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [newAccount, setNewAccount] = useState(true);
 
 	const changeHandler = (e) => {
 		const {
@@ -67,8 +69,19 @@ export default function Auth() {
 		if (name === "password") setPassword(value);
 	};
 
-	const submitHandler = (e) => {
+	const submitHandler = async (e) => {
 		e.preventDefault();
+		try {
+			const data = newAccount
+				? await authService.createUserWithEmailAndPassword(
+						email,
+						password
+				  )
+				: await authService.signInWithEmailAndPassword(email, password);
+			console.log(data);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 	return (
 		<StyledAuthWrapper>
@@ -94,7 +107,10 @@ export default function Auth() {
 					value={password}
 					onChange={changeHandler}
 				/>
-				<StyledLoginSubmit type="submit" value="Log In" />
+				<StyledLoginSubmit
+					type="submit"
+					value={newAccount ? "Create New Account" : "Log In"}
+				/>
 			</StyledLoginForm>
 
 			<StyledOAuthButton>Google</StyledOAuthButton>
