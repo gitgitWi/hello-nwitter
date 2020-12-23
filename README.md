@@ -1,2 +1,5 @@
-# hello-nwitter
-Created with CodeSandbox
+# Hello-Nwitter
+
+## Twitter Clone Tutorial by Nomad-Coder
+
+- Created with CodeSandbox
