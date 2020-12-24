@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { authService } from "firedb";
+import { firebaseInstance, authService } from "firedb";
 
 const StyledAuthWrapper = styled.div`
 	display: flex;
@@ -94,6 +94,18 @@ export default function Auth() {
 
 	const toggleAccount = () => setNewAccount((prev) => !prev);
 
+	const onOAuthButtonClick = async (e) => {
+		const {
+			currentTarget: { name }
+		} = e;
+		const provider =
+			name === "google"
+				? new firebaseInstance.auth.GoogleAuthProvider()
+				: new firebaseInstance.auth.GithubAuthProvider();
+		const data = await authService.signInWithPopup(provider);
+		console.log(data);
+	};
+
 	return (
 		<StyledAuthWrapper>
 			<StyledAuthHeader>Need to Login</StyledAuthHeader>
@@ -126,8 +138,12 @@ export default function Auth() {
 				/>
 			</StyledLoginForm>
 
-			<StyledOAuthButton>Google</StyledOAuthButton>
-			<StyledOAuthButton>Github</StyledOAuthButton>
+			<StyledOAuthButton name="google" onClick={onOAuthButtonClick}>
+				Google
+			</StyledOAuthButton>
+			<StyledOAuthButton name="github" onClick={onOAuthButtonClick}>
+				Github
+			</StyledOAuthButton>
 		</StyledAuthWrapper>
 	);
 }
