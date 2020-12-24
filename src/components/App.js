@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
 import AppRouter from "components/Router";
@@ -11,11 +11,19 @@ const StyledAppWrapper = styled.div`
 `;
 
 export default function App() {
-	const currentUser = authService.currentUser;
-	const [isLoggedIn, setIsLoggedIn] = useState(currentUser);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [init, setInit] = useState(false);
+
+	useEffect(() => {
+		authService.onAuthStateChanged((user) => {
+			setIsLoggedIn(user ? true : false);
+		});
+		setInit(true);
+	}, []);
+
 	return (
 		<StyledAppWrapper>
-			<AppRouter isLoggedIn={isLoggedIn} />
+			{init ? <AppRouter isLoggedIn={isLoggedIn} /> : "Initializing..."}
 		</StyledAppWrapper>
 	);
 }

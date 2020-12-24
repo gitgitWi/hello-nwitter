@@ -44,8 +44,15 @@ const StyledLoginInput = styled.input`
 const StyledLoginSubmit = styled.input`
 	width: 100%;
 	height: 35px;
+	margin: 10px 0;
 
 	font-size: 22px;
+`;
+
+const StyledLoginErrorMessage = styled.p`
+	font-size: 14px;
+	font-weight: 900;
+	color: red;
 `;
 
 const StyledOAuthButton = styled.button`
@@ -59,6 +66,7 @@ export default function Auth() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [newAccount, setNewAccount] = useState(true);
+	const [error, setError] = useState("");
 
 	const changeHandler = (e) => {
 		const {
@@ -79,10 +87,13 @@ export default function Auth() {
 				  )
 				: await authService.signInWithEmailAndPassword(email, password);
 			console.log(data);
-		} catch (error) {
-			console.error(error);
+		} catch (e) {
+			setError(e.message);
 		}
 	};
+
+	const toggleAccount = () => setNewAccount((prev) => !prev);
+
 	return (
 		<StyledAuthWrapper>
 			<StyledAuthHeader>Need to Login</StyledAuthHeader>
@@ -107,9 +118,11 @@ export default function Auth() {
 					value={password}
 					onChange={changeHandler}
 				/>
+				<StyledLoginErrorMessage>{error}</StyledLoginErrorMessage>
 				<StyledLoginSubmit
 					type="submit"
-					value={newAccount ? "Create New Account" : "Log In"}
+					value={newAccount ? "Create New Account" : "Sign In"}
+					onClick={toggleAccount}
 				/>
 			</StyledLoginForm>
 
