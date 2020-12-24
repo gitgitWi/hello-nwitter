@@ -86,7 +86,6 @@ export default function Auth() {
 						password
 				  )
 				: await authService.signInWithEmailAndPassword(email, password);
-			console.log(data);
 		} catch (e) {
 			setError(e.message);
 		}
@@ -103,7 +102,6 @@ export default function Auth() {
 				? new firebaseInstance.auth.GoogleAuthProvider()
 				: new firebaseInstance.auth.GithubAuthProvider();
 		const data = await authService.signInWithPopup(provider);
-		console.log(data);
 	};
 
 	return (
